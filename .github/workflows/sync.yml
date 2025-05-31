@@ -1,0 +1,22 @@
+name: Sync with upstream
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 每天自动同步
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Sync with upstream
+        run: |
+          git remote add upstream https://github.com/TapXWorld/ChinaTextbook.git
+          git fetch upstream
+          git checkout main
+          git merge upstream/main
+          git push
